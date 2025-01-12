@@ -9,7 +9,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseDriver {
-    public static String url="";
+    public static String url="https://opensource-demo.orangehrmlive.com/web/index.php/auth/login";
     public static WebDriver driver;
 
     @BeforeSuite
