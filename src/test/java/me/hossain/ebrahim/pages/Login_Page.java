@@ -4,18 +4,20 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import me.hossain.ebrahim.basedrivers.PageDriver;
 import me.hossain.ebrahim.utilities.CommonMethods;
+import me.hossain.ebrahim.utilities.ExcelUtils;
 import me.hossain.ebrahim.utilities.Screenshots;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
 public class Login_Page extends CommonMethods {
 
     ExtentTest test;
-
+    ExcelUtils excelUtils = new ExcelUtils();
     public Login_Page(ExtentTest test) {
         PageFactory.initElements(PageDriver.getCurrentDriver(), this);
         this.test = test;
@@ -43,13 +45,11 @@ public class Login_Page extends CommonMethods {
         test.pass("<p style=\"color:#85BC63; font-size:13px\"><b>" + message + "</b></p>");
     }
 
-    @SuppressWarnings("unused")
     public void passCaseWithSC(String message, String scName) throws IOException {
         test.pass("<p style=\"color:#85BC63; font-size:13px\"><b>" + message + "</b></p>");
-        String screenShotPath = Screenshots.capture(PageDriver.getCurrentDriver(), "" + scName + "");
-        String dest = System.getProperty("user.dir") + "\\screenshots\\" + scName + ".png";
-        test.info(dest);
-        test.pass(MediaEntityBuilder.createScreenCaptureFromPath(dest).build());
+        String screenShotPath = Screenshots.capture(PageDriver.getCurrentDriver(), scName); // Capture screenshot
+        test.info("Screenshot saved at: " + screenShotPath); // Add file path info to the report
+        test.pass(MediaEntityBuilder.createScreenCaptureFromPath(screenShotPath).build()); // Attach screenshot
     }
 
     // Fail
@@ -66,16 +66,18 @@ public class Login_Page extends CommonMethods {
 
     public void login() throws IOException {
         try{
+
+            excelUtils.ReadExcel();
             test.info("Please enter your username");
             if(username.isDisplayed()){
-                username.sendKeys("Admin");
+                username.sendKeys(excelUtils.username);
                 passCase("You have successfully entered your username");
                 Thread.sleep(5000);
 
                 try {
                     test.info("Please enter your password");
                     if(password.isDisplayed()){
-                        password.sendKeys("admin123");
+                        password.sendKeys(excelUtils.password);
                         passCase("You have successfully entered your password");
                         Thread.sleep(5000);
 
